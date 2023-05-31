@@ -1,0 +1,18 @@
+import mlflow.pyfunc
+import pandas as pd
+import os
+import numpy as np
+
+
+def load_model():
+    cur_dir = os.path.dirname(os.path.realpath(__file__))
+    return mlflow.pyfunc.load_model(cur_dir)
+
+
+def predict(data, model=load_model()):
+    if isinstance(data, dict):
+        payload = pd.DataFrame(**data)
+    else:
+        payload = np.array(data)
+    pred = model.predict(payload).tolist()
+    return {'prediction': pred}

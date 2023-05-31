@@ -1,44 +1,69 @@
-*This repository acts as a template for all of Oracle’s GitHub repositories. It contains information about the guidelines for those repositories. All files and sections contained in this template are mandatory, and a GitHub app ensures alignment with these guidelines. To get started with a new repository, replace the italic paragraphs with the respective text for your project.*
+# OCI Mlflow Plugin
 
-# Project name
+[![PyPI](https://img.shields.io/pypi/v/oci-mlflow.svg?style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/oci-mlflow/) [![Python](https://img.shields.io/pypi/pyversions/oci-mlflow.svg?style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/oci-mlflow/)
 
-*Describe your project's features, functionality and target audience*
+The OCI MLflow plugin enables OCI users to use OCI resources to manage their machine learning usecase life cycle. This table below provides the mapping between the MLflow features and the OCI resources that are used.
+
+| MLflow Use Case    | OCI Resource |
+| -------- | ------- |
+| User running machine learning experiments on notebook, logs model artifacts, model performance etc  | Data Science Jobs, Object Storage, MySQL |
+| Batch workloads using spark | Data Flow, Object Storage, MySQL |
+| Model Deployment    | Data Science Model Deployment |
+| User running machine learning experiments on notebook, logs model artifacts, model performance etc    | Object Storage, MySQL |
+
 
 ## Installation
 
-*Provide detailed step-by-step installation instructions. You can name this section **How to Run** or **Getting Started** instead of **Installation** if that's more acceptable for your project*
+To install the `oci-mlflow` plugin call -
+
+```bash
+  python3 -m pip install oci-mlflow
+```
+
+To test the `oci-mlflow` plugin call -
+
+```bash
+  mlflow deployments help -t oci-datascience
+```
 
 ## Documentation
-
-*Developer-oriented documentation can be published on GitHub, but all product documentation must be published on <https://docs.oracle.com>*
+  - [OCI MLflow Documentation](https://oci-mlflow.readthedocs.io/en/latest/index.html)
+  - [Getting started with Oracle Accelerated Data Science SDK](https://accelerated-data-science.readthedocs.io/en/latest/index.html)
+  - [Getting started with OCI Data Science Jobs](https://docs.oracle.com/en-us/iaas/data-science/using/jobs-about.htm)
+  - [Getting started with Data Science Environments](https://docs.oracle.com/en-us/iaas/data-science/using/conda_environ_list.htm)
+  - [Getting started with Custom Conda Environments](https://docs.oracle.com/en-us/iaas/data-science/using/conda_create_conda_env.htm)
+  - [Oracle AI & Data Science Blog](https://blogs.oracle.com/ai-and-datascience/)
+  - [OCI Documentation](https://docs.oracle.com/en-us/iaas/data-science/using/data-science.htm)
 
 ## Examples
+### Running MLflow projects on the OCI `Data Science jobs` and `Data Flow applications` -
 
-*Describe any included examples or provide a link to a demo/tutorial*
+```bash
+export MLFLOW_TRACKING_URI=<tracking server url>
+mlflow run . --experiment-name My-Experiment --backend oci-datascience --backend-config ./oci-datascience-config.json
+```
 
-## Help
+### Deploying MLflow models to the OCI Model Deployments -
 
-*Inform users on where to get help or how to receive official support from Oracle (if applicable)*
+```bash
+mlflow deployments help -t oci-datascience
+
+export MLFLOW_TRACKING_URI=<tracking server url>
+
+mlflow deployments create --name <model deployment name> -m models:/<registered model name>/<model version> -t oci-datascience --config deploy-config-file=deployment_specification.yaml
+```
+
 
 ## Contributing
 
-*If your project has specific contribution requirements, update the CONTRIBUTING.md file to ensure those requirements are clearly explained*
+This project welcomes contributions from the community. Before submitting a pull request, please review our [contribution guide](https://github.com/oracle/oci-mlflow/blob/main/CONTRIBUTING.md)
 
-This project welcomes contributions from the community. Before submitting a pull request, please [review our contribution guide](./CONTRIBUTING.md)
+Find Getting Started instructions for developers in [README-development.md](https://github.com/oracle/oci-mlflow/blob/main/README-development.md)
 
 ## Security
 
-Please consult the [security guide](./SECURITY.md) for our responsible security vulnerability disclosure process
+Consult the security guide [SECURITY.md](https://github.com/oracle/oci-mlflow/blob/main/SECURITY.md) for our responsible security vulnerability disclosure process.
 
 ## License
 
-*The correct copyright notice format for both documentation and software is*
-    "Copyright (c) [year,] year Oracle and/or its affiliates."
-*You must include the year the content was first released (on any platform) and the most recent year in which it was revised*
-
-Copyright (c) 2023 Oracle and/or its affiliates.
-
-*Replace this statement if your project is not licensed under the UPL*
-
-Released under the Universal Permissive License v1.0 as shown at
-<https://oss.oracle.com/licenses/upl/>.
+Copyright (c) 2023 Oracle and/or its affiliates. Licensed under the [Universal Permissive License v1.0](https://oss.oracle.com/licenses/upl/)

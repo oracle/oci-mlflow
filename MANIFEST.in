@@ -1,0 +1,4 @@
+include LICENSE.txt
+include THIRD_PARTY_LICENSES.txt
+include oci_mlflow/version.json
+include oci_mlflow/templates/*.jinja2

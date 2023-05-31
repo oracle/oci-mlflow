@@ -1,0 +1,38 @@
+kind: job
+name: "{DataFlow application name. For MLflow, it will be replaced with the Project name}"
+dependencies:
+  - python=3.8
+spec:
+  infrastructure:
+    kind: infrastructure
+    spec:
+      compartmentId: ocid1.testCompartmentId
+      driverShape: VM.Standard.E4.Flex
+      driverShapeConfig:
+        memory_in_gbs: 32
+        ocpus: 2
+      executorShape: VM.Standard.E4.Flex
+      executorShapeConfig:
+        memory_in_gbs: 32
+        ocpus: 2
+      language: PYTHON
+      logsBucketUri: oci://test-log-bucket
+      numExecutors: 1
+      sparkVersion: 3.2.1
+      privateEndpointId: ocid1.dataflowprivateendpoint
+    type: dataFlow
+  runtime:
+    kind: runtime
+    spec:
+      configuration:
+        spark.driverEnv.MLFLOW_TRACKING_URI: http://test-tracking-uri
+      conda:
+        type: published
+        uri: oci://custom-conda-packs@ociodscdev/conda_environments/cpu/PySpark 3.2
+          and Data Flow/2.0/pyspark32_p38_cpu_v2
+        model_uri: oci://custom-conda-packs@ociodscdev/conda_environments/cpu/PySpark 3.2
+          and Data Flow/2.0/pyspark32_p38_cpu_v2
+      condaAuthType: resource_principal
+      scriptBucket: oci://test-bucket
+      scriptPathURI: "{Path to the executable script. For MLflow, it will be replaced with the CMD}"
+    type: dataFlow

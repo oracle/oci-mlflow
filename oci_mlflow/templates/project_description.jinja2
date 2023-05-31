@@ -1,0 +1,15 @@
+{% if job_info["spec"]["infrastructure"]["type"] == "dataScienceJob" %}
+## OCI Data Science Job Details
+#### **Job:** [{{job_info["spec"]["name"]}}](https://cloud.oracle.com/data-science/jobs/{{job_info["spec"]["id"]}})
+#### **Job Run:** [{{job_run_info["displayName"]}}](https://cloud.oracle.com/data-science/job-runs/{{job_run_info["id"]}})
+#### **Compute instance shape:** {{job_info["spec"]["infrastructure"]["spec"]["shapeName"]}}
+#### **Storage:**  {{job_info["spec"]["infrastructure"]["spec"]["blockStorageSize"]}} GB
+{% else %}
+## OCI Data Flow Application Details
+#### **Application:** [{{job_info["spec"]["name"]}}](https://cloud.oracle.com/data-flow/apps/details/{{job_info["spec"]["id"]}})
+#### **Application Run:** [{{job_run_info["displayName"]}}](https://cloud.oracle.com/data-flow/runs/details/{{job_run_info["id"]}})
+#### **Driver shape:** {{job_info["spec"]["infrastructure"]["spec"]["driverShape"]}}
+#### **Executor shape:** {{job_info["spec"]["infrastructure"]["spec"]["executorShape"]}}
+#### **Number of executors:** {{job_info["spec"]["infrastructure"]["spec"]["numExecutors"]}}
+#### **Spark version:** {{job_info["spec"]["infrastructure"]["spec"]["sparkVersion"]}}
+{% endif %}
