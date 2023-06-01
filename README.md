@@ -56,7 +56,7 @@ mlflow deployments create --name <model deployment name> -m models:/<registered 
 
 ## Contributing
 
-This project welcomes contributions from the community. Before submitting a pull request, please review our [contribution guide](https://github.com/oracle/oci-mlflow/blob/main/CONTRIBUTING.md)
+This project welcomes contributions from the community. Before submitting a pull request, please[review our contribution guide](./CONTRIBUTING.md)
 
 Find Getting Started instructions for developers in [README-development.md](https://github.com/oracle/oci-mlflow/blob/main/README-development.md)
 
