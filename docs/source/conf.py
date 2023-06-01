@@ -33,21 +33,21 @@ author = "Oracle Data Science"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "sphinx.ext.napoleon",
     "sphinx.ext.autodoc",
+    "sphinx.ext.doctest",
+    "sphinx.ext.ifconfig",
+    "sphinx.ext.todo",
+    "sphinx.ext.extlinks",
+    "sphinx.ext.intersphinx",
     "nbsphinx",
     "sphinx_code_tabs",
-    "sphinx_rtd_theme",
+    "sphinx_copybutton",
     "sphinx.ext.duration",
-    "sphinx.ext.doctest",
-    "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.intersphinx",
     "sphinx.ext.viewcode",
-    "sphinx.ext.napoleon",
-    "sphinx_copybutton",
-    "sphinx.ext.todo",
-    "sphinx_design",
-    "sphinx.ext.extlinks",
+    "sphinx_autorun",
 ]
 
 intersphinx_mapping = {
@@ -82,6 +82,10 @@ exclude_patterns = ["build", "**.ipynb_checkpoints", "Thumbs.db", ".DS_Store"]
 #
 html_theme = "furo"
 language = "en"
+
+# Disable the generation of the various indexes
+html_use_modindex = False
+html_use_index = False
 
 html_theme_options = {
     "light_logo": "logo-light-mode.png",
