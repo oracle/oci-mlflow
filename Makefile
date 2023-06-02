@@ -1,6 +1,6 @@
-include .env
+-include .env
 
-.PHONY: build clean deploy
+.PHONY: clean dist wheel
 
 TAG:=latest
 IMAGE_NAME:=oci-mlflow
@@ -9,11 +9,14 @@ RND:=1
 
 clean:
 	@rm -rf dist build oci_mlflow.egg-info
+	@find ./ -name '*.pyc' -exec rm -f {} \;
+	@find ./ -name 'Thumbs.db' -exec rm -f {} \;
+	@find ./ -name '*~' -exec rm -f {} \;
 
-build: clean
+dist: clean
 	@python setup.py bdist_wheel
 
-wheel: build tmp-copy-whl
+wheel: dist tmp-copy-whl
 
 build-image:
 	docker build --network host --build-arg RND=$(RND) -t $(IMAGE_NAME):$(TAG) -f container-image/Dockerfile .
