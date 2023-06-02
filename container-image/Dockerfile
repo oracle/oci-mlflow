@@ -24,13 +24,17 @@ ENV PATH="/miniconda/envs/${CONDA_ENV_NAME}}/bin:$PATH"
 RUN conda init bash && source ~/.bashrc && conda activate ${CONDA_ENV_NAME}
 
 RUN mkdir ${MLFLOW_DIR}
-COPY ${CONTAINER_ARTIFACT_DIR}/run.py ${MLFLOW_DIR}/run.py
-COPY ${CONTAINER_ARTIFACT_DIR}/launch_mlflow.sh ${MLFLOW_DIR}/launch_mlflow.sh
+ADD ${CONTAINER_ARTIFACT_DIR}/run ${MLFLOW_DIR}/
 RUN chmod a+x ${MLFLOW_DIR}/launch_mlflow.sh
 
 ENV MLFLOW_DIR=${MLFLOW_DIR}
 
 EXPOSE 5000
+
+RUN if [ -f ${MLFLOW_DIR}/oci_mlflow*.whl ]; then \
+        local_whl=$(find ${MLFLOW_DIR} -name "*.whl" -exec basename {} \; | head -n 1 ); \
+        source ~/.bashrc && conda activate ${CONDA_ENV_NAME} && pip install ${MLFLOW_DIR}/$local_whl; \
+    fi
 
 RUN echo "conda activate oci-mlflow">>/root/.bashrc
 SHELL ["/bin/bash", "--login", "-c"]

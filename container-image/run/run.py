@@ -126,6 +126,10 @@ def launch_mlflow():
     # It is better to pass extra args through environment variables.
     # More info - https://mlflow.org/docs/latest/cli.html#mlflow-server
     cmd_split = shlex.split(mlflow_cmd_option)
+
+    print("*"*50)
+    print([MLFLOW_LAUNCH_SCRIPT] + cmd_split)
+    print("*"*50)
     subprocess.run(
         [MLFLOW_LAUNCH_SCRIPT] + cmd_split,  # capture_output=True
     )
