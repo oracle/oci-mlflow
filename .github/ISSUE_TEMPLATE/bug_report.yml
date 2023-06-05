@@ -27,7 +27,7 @@ body:
         - label: >
             I have confirmed this bug exists on the main branch of oci-mlflow.
         - label: >
-            I agree to follow [Contributing to this repository](https://github.com/oracle/oci-mlflow/blob/main/CONTRIBUTING.md).
+            I agree to follow the [Code of Conduct](https://github.com/oracle/.github/blob/main/CODE_OF_CONDUCT.md).
           required: true
   - type: textarea
     id: description

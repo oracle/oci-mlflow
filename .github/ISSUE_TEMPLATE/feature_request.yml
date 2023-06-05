@@ -7,7 +7,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Before proceeding, please review the [Contributing to this repository](https://github.com/oracle/oci-mlflow/blob/main/CONTRIBUTING.md) and the [Code of Conduct](https://www.contributor-covenant.org/version/1/4/code-of-conduct/).
+        Before proceeding, please review the [Contributing to this repository](https://github.com/oracle/oci-mlflow/blob/main/CONTRIBUTING.md) and the [Code of Conduct](https://github.com/oracle/.github/blob/main/CODE_OF_CONDUCT.md).
         
         ---
         
