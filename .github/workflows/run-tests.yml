@@ -36,8 +36,7 @@ jobs:
         python-version: ["3.8", "3.9", "3.10"]
         include:
           - python-version: "3.9"
-            cov-reports: --cov=ads --cov-report=xml --cov-report=html
-
+            cov-reports: --cov=oci_mlflow --cov-report=xml --cov-report=html
 
     steps:
       - uses: actions/checkout@v3
@@ -61,14 +60,14 @@ jobs:
         run: |
           set -x # print commands that are executed
           mkdir -p "$HOME_RUNNER_DIR"/.oci
-          openssl genrsa -out $HOME_RUNNER_DIR/.oci/oci_ads_user.pem 2048
+          openssl genrsa -out $HOME_RUNNER_DIR/.oci/oci_mlflow_user.pem 2048
           cat <<EOT >> "$HOME_RUNNER_DIR/.oci/config"
           [DEFAULT]
           user=ocid1.user.oc1..xxx
           fingerprint=00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00
           tenancy=ocid1.tenancy.oc1..xxx
           region=test_region
-          key_file=$HOME_RUNNER_DIR/.oci/oci_ads_user.pem
+          key_file=$HOME_RUNNER_DIR/.oci/oci_mlflow_user.pem
           EOT
           ls -lha "$HOME_RUNNER_DIR"/.oci
           echo "Test config file:"
@@ -88,7 +87,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: ${{ matrix.cov-reports }}
         with:
-          name: cov-reports-${{ matrix.name }}
+          name: cov-reports
           path: |
             htmlcov/
             .coverage
@@ -105,8 +104,9 @@ jobs:
           
           # Calculate overall coverage and update body message
           COV=$(grep -E 'pc_cov' htmlcov/index.html | cut -d'>' -f 2 | cut -d'%' -f 1)
-            if [[ ! -z $COV ]]; then 
-              if [[ $COV -lt 50 ]]; then COLOR=red; elif [[ $COV -lt 80 ]]; then COLOR=yellow; else COLOR=green; fi
+            if [[ ! -z $COV ]]; then
+              ROUNDED_COV=$(echo $COV | cut -d'.' -f 1)
+              if [[ $ROUNDED_COV -lt 50 ]]; then COLOR=red; elif [[ $ROUNDED_COV -lt 80 ]]; then COLOR=yellow; else COLOR=green; fi
               echo COV_BODY="$COV_BODY_INTRO ![Coverage-$COV%](https://img.shields.io/badge/coverage-$COV%25-$COLOR)" >> $GITHUB_ENV
             fi
 
