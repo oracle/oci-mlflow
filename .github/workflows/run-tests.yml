@@ -19,6 +19,7 @@ concurrency:
 
 permissions:
   contents: read
+  pull-requests: write
 
 # hack for https://github.com/actions/cache/issues/810#issuecomment-1222550359
 env:
@@ -34,6 +35,9 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
+        include:
+          - python-version: "3.9"
+            cov-reports: --cov=oci_mlflow --cov-report=xml --cov-report=html
 
     steps:
       - uses: actions/checkout@v3
@@ -57,27 +61,65 @@ jobs:
         run: |
           set -x # print commands that are executed
           mkdir -p "$HOME_RUNNER_DIR"/.oci
-          openssl genrsa -out $HOME_RUNNER_DIR/.oci/oci_ads_user.pem 2048
+          openssl genrsa -out $HOME_RUNNER_DIR/.oci/oci_mlflow_user.pem 2048
           cat <<EOT >> "$HOME_RUNNER_DIR/.oci/config"
           [DEFAULT]
           user=ocid1.user.oc1..xxx
           fingerprint=00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00
           tenancy=ocid1.tenancy.oc1..xxx
           region=test_region
-          key_file=$HOME_RUNNER_DIR/.oci/oci_ads_user.pem
+          key_file=$HOME_RUNNER_DIR/.oci/oci_mlflow_user.pem
           EOT
           ls -lha "$HOME_RUNNER_DIR"/.oci
           echo "Test config file:"
           cat $HOME_RUNNER_DIR/.oci/config
 
       - name: "Run tests"
-        timeout-minutes: 15
+        timeout-minutes: 5
         shell: bash
-        env:
-          NoDependency: True
         run: |
           set -x # print commands that are executed
           $CONDA/bin/conda init
           source /home/runner/.bashrc
           pip install -r test-requirements.txt
-          python -m pytest -v -p no:warnings --durations=5 tests
+          python -m pytest ${{ matrix.cov-reports }} tests
+
+      - name: "Calculate coverage"
+        if: ${{ success() }} && ${{ github.event.issue.pull_request }}
+        run: |
+          set -x # print commands that are executed
+          
+          # Prepare default cov body text 
+          COV_BODY_INTRO="📌 Overall coverage:\n\n"
+          echo COV_BODY="$COV_BODY_INTRO No success to gather report. 😿" >> $GITHUB_ENV
+          
+          # Calculate overall coverage and update body message
+          COV=$(grep -E 'pc_cov' htmlcov/index.html | cut -d'>' -f 2 | cut -d'%' -f 1)
+            if [[ ! -z $COV ]]; then
+              ROUNDED_COV=$(echo $COV | cut -d'.' -f 1)
+              if [[ $ROUNDED_COV -lt 50 ]]; then COLOR=red; elif [[ $ROUNDED_COV -lt 80 ]]; then COLOR=yellow; else COLOR=green; fi
+              echo COV_BODY="$COV_BODY_INTRO ![Coverage-$COV%](https://img.shields.io/badge/coverage-$COV%25-$COLOR)" >> $GITHUB_ENV
+            fi
+
+      - name: "Add comment with coverage info to PR"
+        uses: actions/github-script@v6
+        if: ${{ success() }} && ${{ github.event.issue.pull_request }}
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '${{ env.COV_BODY }}'
+            })
+
+      - name: "Save coverage files"
+        uses: actions/upload-artifact@v3
+        if: ${{ matrix.cov-reports }}
+        with:
+          name: cov-reports
+          path: |
+            htmlcov/
+            .coverage
+            coverage.xml
