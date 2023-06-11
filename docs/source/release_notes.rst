@@ -10,6 +10,7 @@ Release date: Jun 2, 2023
 
 * Updated the ``README-development.md`` file for better clarity and ease of use.
 * Improved the ``Dockerfile`` to provide the option of running the tracking server using a local ``oci-mlflow`` wheel.
+* Refactored Object Storage (OS) plugin to leverage Oracle Cloud Infrastructure (OCI) `OS UploadManager <https://docs.oracle.com/en-us/iaas/tools/python/2.104.1/api/upload_manager.html>`__, enhancing the functionality and improving performance.
 
 **Bug Fixes:**
 
