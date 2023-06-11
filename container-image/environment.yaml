@@ -3,7 +3,7 @@ dependencies:
   - main::pip
   - pip:
     - oracledb
-    - mlflow==2.3.2
+    - mlflow
     - oracle-ads>=2.8.5
     - mysql-connector-python
     - oci-mlflow
