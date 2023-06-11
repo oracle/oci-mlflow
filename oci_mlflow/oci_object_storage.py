@@ -123,12 +123,9 @@ class OCIObjectStorageArtifactRepository(ArtifactRepository):
         artifact_path:str
             Directory within the run's artifact directory in which to log the artifact.
         """
-        if artifact_path:
-            dest_path = os.path.join(self.artifact_uri, artifact_path)
-        else:
-            dest_path = self.artifact_uri
-        dest_path = os.path.join(dest_path, os.path.basename(local_file))
-
+        dest_path = os.path.join(
+            self.artifact_uri, artifact_path or "", os.path.basename(local_file)
+        )
         ArtifactUploader().upload(local_file, dest_path)
 
     def log_artifacts(self, local_dir: str, artifact_path: str = None):
@@ -144,11 +141,7 @@ class OCIObjectStorageArtifactRepository(ArtifactRepository):
             Directory within the run's artifact directory in which to log the artifacts.
         """
         artifact_uploader = ArtifactUploader()
-
-        if artifact_path:
-            dest_path = os.path.join(self.artifact_uri, artifact_path)
-        else:
-            dest_path = artifact_path
+        dest_path = os.path.join(self.artifact_uri, artifact_path or "")
         local_dir = os.path.abspath(local_dir)
 
         for root, _, filenames in os.walk(local_dir):
