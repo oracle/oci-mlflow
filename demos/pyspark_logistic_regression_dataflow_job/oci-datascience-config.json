@@ -1,0 +1,4 @@
+{
+  "oci_auth": "api_key",
+  "oci_job_template_path": "{work_dir}/oci-datascience-template.yaml"
+}

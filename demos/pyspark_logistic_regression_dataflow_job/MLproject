@@ -1,0 +1,7 @@
+name: pyspark_logistic_regression_dataflow_job
+
+entry_points:
+  main:
+    parameters:
+      seed: { type: float, default: 24 }
+    command: "logistic_regression.py --seed {seed}"

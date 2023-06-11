@@ -1,0 +1,39 @@
+# Copyright (c) 2023 Oracle and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
+
+FROM iad.ocir.io/namespace/image:tag
+
+RUN yum install -y --setopt=skip_missing_names_on_install=False maven java-11-openjdk wget curl nginx sudo
+
+# Data Science service extracts the model to /opt/ds/model/deployed_model
+RUN mkdir -p /opt/ds/model/deployed_model && \
+    mkdir -p /opt/ml && \
+    ln -s /opt/ml/model /opt/ds/model/deployed_model
+
+RUN export JAVA_HOME=/usr/lib/jvm/$(ls /usr/lib/jvm/| grep java-11-openjdk*)
+ENV GUNICORN_CMD_ARGS="--timeout 60 -k gevent"
+# Set up the program in the image
+WORKDIR /opt/mlflow
+
+RUN mvn --batch-mode dependency:copy -Dartifact=org.mlflow:mlflow-scoring:2.1.1:pom -DoutputDirectory=/opt/java
+RUN mvn --batch-mode dependency:copy -Dartifact=org.mlflow:mlflow-scoring:2.1.1:jar -DoutputDirectory=/opt/java/jars
+RUN cp /opt/java/mlflow-scoring-2.1.1.pom /opt/java/pom.xml
+RUN cd /opt/java && mvn --batch-mode dependency:copy-dependencies -DoutputDirectory=/opt/java/jars
+
+ENV MLFLOW_DISABLE_ENV_CREATION="true"
+ENV DISABLE_NGINX=true
+
+COPY conda.yaml /opt/conda.yaml
+RUN mamba env update --name oci-mlflow -f /opt/conda.yaml && pip install gevent
+
+ENV NGINX_ROOT=/etc/nginx
+ENV NGINX_PID=/var/run/nginx.pid
+ENV NGINX_BIN=/usr/sbin/nginx
+ENV NGINX_USER=root
+
+
+EXPOSE 5001
+
+COPY nginx.conf /etc/nginx/nginx.conf
+ENTRYPOINT [ "/bin/bash", "--login", "-c" ]
+CMD ["nginx -p $PWD && mlflow models serve -p 8080 -h 0.0.0.0 -m /opt/ds/model/deployed_model --env-manager local"]
