@@ -4,7 +4,7 @@ Release Notes
 
 1.0.1
 -----
-Release date: Jun 2, 2023
+Release date: Jun 15, 2023
 
 **New Features and Enhancements:**
 
