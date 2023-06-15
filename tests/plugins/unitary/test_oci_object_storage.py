@@ -1,17 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; -*-
 
+import os
+import tempfile
+from unittest.mock import MagicMock, Mock, patch
+
 # Copyright (c) 2023 Oracle and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
 import pytest
-from unittest.mock import MagicMock, Mock, patch
-import tempfile
-import os
-
 from mlflow.entities import FileInfo
 
 from oci_mlflow import oci_object_storage
-from oci_mlflow.oci_object_storage import OCIObjectStorageArtifactRepository
+from oci_mlflow.oci_object_storage import (
+    ArtifactUploader,
+    OCIObjectStorageArtifactRepository,
+)
+from oci import object_storage
 
 
 class DataObject:
@@ -41,7 +45,7 @@ class TestOCIObjectStorageArtifactRepository:
             yield mock_open
 
     def test_parse_os_uri(self, oci_artifact_repo):
-        bucket, namespace, path = oci_artifact_repo.parse_os_uri(
+        bucket, namespace, path = oci_object_storage.parse_os_uri(
             "oci://my-bucket@my-namespace/my-artifact-path"
         )
         assert bucket == "my-bucket"
@@ -50,20 +54,7 @@ class TestOCIObjectStorageArtifactRepository:
 
     def test_parse_os_uri_with_invalid_scheme(self, oci_artifact_repo):
         with pytest.raises(Exception):
-            oci_artifact_repo.parse_os_uri("s3://my-bucket/my-artifact-path")
-
-    def test_upload_file(self, mock_fsspec_open):
-        local_file = os.path.join(self.curr_dir, "test_files/test.txt")
-        dest_path = "oci://my-bucket@my-namespace/path/to/test.txt"
-        repository = OCIObjectStorageArtifactRepository(artifact_uri=dest_path)
-        mock_outfile = Mock()
-        mock_fsspec_open.return_value.__enter__.return_value = mock_outfile
-
-        repository._upload_file(local_file, dest_path)
-
-        mock_fsspec_open.assert_called_once_with(dest_path, "wb")
-        with open(local_file, "rb") as f:
-            mock_outfile.write.assert_called_once_with(f.read())
+            oci_object_storage.parse_os_uri("s3://my-bucket/my-artifact-path")
 
     def test_download_file(self, oci_artifact_repo):
         mock_fs = MagicMock()
@@ -82,7 +73,7 @@ class TestOCIObjectStorageArtifactRepository:
                 local_path,
             )
 
-    @patch.object(OCIObjectStorageArtifactRepository, "_upload_file")
+    @patch.object(ArtifactUploader, "upload")
     def test_log_artifact(self, mock_upload_file, oci_artifact_repo):
         local_file = "test_files/test.txt"
         artifact_path = "logs"
@@ -92,7 +83,7 @@ class TestOCIObjectStorageArtifactRepository:
         )
         mock_upload_file.assert_called_once_with(local_file, expected_dest_path)
 
-    @patch.object(OCIObjectStorageArtifactRepository, "_upload_file")
+    @patch.object(ArtifactUploader, "upload")
     def test_log_artifacts(self, mock_upload_file, oci_artifact_repo):
         local_dir = os.path.join(self.curr_dir, "test_files")
         dest_path = "path/to/dest"
@@ -128,3 +119,29 @@ class TestOCIObjectStorageArtifactRepository:
             FileInfo("sub_folder", True, 0),
         ]
         assert artifacts == expected_artifacts
+
+
+class TestArtifactUploader:
+    def test_init(self):
+        """Ensures the ArtifactUploader instance can be initialized."""
+        artifact_uploader = ArtifactUploader()
+        assert isinstance(
+            artifact_uploader.upload_manager, object_storage.UploadManager
+        )
+
+    @patch.object(object_storage.UploadManager, "upload_file")
+    def test_upload(self, mock_upload_file):
+        """Tests uploading model artifacts."""
+        artifact_uploader = ArtifactUploader()
+
+        local_file = "test_files/test.txt"
+        dest_path = "oci://my-bucket@my-namespace/my-artifact-path/logs/test.txt"
+        artifact_uploader.upload(local_file, dest_path)
+
+        mock_upload_file.assert_called_with(
+            namespace_name="my-namespace",
+            bucket_name="my-bucket",
+            object_name="my-artifact-path/logs/test.txt",
+            file_path=local_file,
+        )
+
