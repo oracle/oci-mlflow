@@ -50,7 +50,7 @@ The ``{work_dir}`` can be used to point out that the YAML template located insid
 Data Science Job Template
 =========================
 
-The template file contains the information about the infrastructure on which a Data Science job should be run, and also the runtime information. More details can be found in the `ADS documentation <https://accelerated-data-science.readthedocs.io/en/latest/user_guide/jobs/data_science_job.html>`__. The template file is divided into two main sections: ``infrastructure`` and ``runtime``.
+The template file contains the information about the infrastructure on which a Data Science job should be run, and also the runtime information. More details can be found in the `ADS documentation <https://accelerated-data-science.readthedocs.io/en/latest/user_guide/jobs/data_science_job.html>`__. The template file is divided into two main sections: ``infrastructure`` and ``runtime``. The template also can be generated using ``ads opctl init`` command. More details can be found in the `ADS documentation <https://accelerated-data-science.readthedocs.io/en/latest/user_guide/cli/opctl/configure.html#generate-starter-yaml>`__.
 
 Data Science Job Infrastructure
 ###############################
@@ -507,7 +507,7 @@ This example demonstrates an MLflow project that trains a logistic regression mo
 
   Copy the ``oci-datascience-config.json`` file to the ``pyspark_ml_autologging`` folder.
 
-- Prepare a ``oci-datascience-template.yaml`` job configuration file.
+- Prepare a ``oci-datascience-template.yaml`` job configuration file. The template can be generated using ``ads opctl init`` command. More details can be found in the `ADS documentation <https://accelerated-data-science.readthedocs.io/en/latest/user_guide/cli/opctl/configure.html#generate-starter-yaml>`__.
 
   .. tabs::
 

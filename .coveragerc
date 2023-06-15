@@ -1,0 +1,28 @@
+[run]
+omit =
+    **/*.jinja2
+    **/__init__.py
+    container-image/*
+    docs/*
+    tests/*
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if __name__ == .__main__.:
+    @(abc\.)?abstractmethod
+    raise AssertionError
+    raise NotImplementedError
+omit =
+    **/*.jinja2
+    **/__init__.py
+    container-image/*
+    docs/*
+    tests/*
+show_missing = true
+skip_empty = true
+precision = 2
+
+[html]
+directory = htmlcov

@@ -1,0 +1,33 @@
+kind: job
+name: "{Job name. For MLflow, it will be replaced with the Project name}"
+spec:
+  infrastructure:
+    kind: infrastructure
+    spec:
+      blockStorageSize: 50
+      compartmentId: ocid1.compartment.oc1..<unique_ID>
+      jobInfrastructureType: ME_STANDALONE
+      jobType: DEFAULT
+      logGroupId: ocid1.loggroup.oc1.iad..<unique_ID>
+      logId: ocid1.log.oc1.iad..<unique_ID>
+      projectId: ocid1.datascienceproject.oc1.iad..<unique_ID>
+      shapeConfigDetails:
+        memoryInGBs: 20
+        ocpus: 2
+      shapeName: VM.Standard.E3.Flex
+      subnetId: ocid1.subnet.oc1.iad..<unique_ID>
+    type: dataScienceJob
+  runtime:
+    kind: runtime
+    spec:
+      args: []
+      conda:
+        type: published
+        uri: oci://bucket@namespace/prefix
+      env:
+      - name: TEST
+        value: TEST_VALUE
+      entrypoint: "{Entry point notebook. For MLflow, it will be replaced with the CMD}"
+      source: "{Path to the source code directory. For MLflow, it will be replaced with path to the project}"
+      notebookEncoding: utf-8
+    type: notebook

@@ -1,0 +1,7 @@
+# The source of this workload is a Jupyter Notebook which will be run on the DataScience job using MLflow CLI/SDK.
+
+name: sklearn_elasticnet_wine_notebook_job
+
+entry_points:
+  main:
+    command: "train.ipynb"
