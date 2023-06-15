@@ -16,6 +16,7 @@ The OCI MLflow plugins allow to utilize Oracle Cloud Infrastructure (OCI) resour
     :maxdepth: 2
     :caption: Contents:
 
+    release_notes
     quickstart
     concepts
     tracking_server
