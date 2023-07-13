@@ -19,13 +19,19 @@ with open(
 
 
 def setup_default_auth():
-    if not os.environ.get("OCI_RESOURCE_PRINCIPAL_VERSION"):
+    """Setup default auth."""
+    if os.environ.get("OCIFS_IAM_TYPE") and os.environ.get("OCI_IAM_TYPE"):
+        return
+    if os.environ.get("OCIFS_IAM_TYPE"):
+        os.environ["OCI_IAM_TYPE"] = os.environ["OCIFS_IAM_TYPE"]
+    elif os.environ.get("OCI_IAM_TYPE"):
+        os.environ["OCIFS_IAM_TYPE"] = os.environ["OCI_IAM_TYPE"]
+    elif os.environ.get("OCI_RESOURCE_PRINCIPAL_VERSION"):
+        os.environ["OCIFS_IAM_TYPE"] = "resource_principal"
+        os.environ["OCI_IAM_TYPE"] = "resource_principal"
+    else:
         os.environ["OCIFS_IAM_TYPE"] = "api_key"
+        os.environ["OCI_IAM_TYPE"] = "api_key"
 
 
-if not ("OCIFS_IAM_TYPE" in os.environ or "OCI_IAM_TYPE" in os.environ):
-    setup_default_auth()
-elif os.environ.get("OCIFS_IAM_TYPE"):
-    os.environ["OCI_IAM_TYPE"] = os.environ.get("OCIFS_IAM_TYPE")
-elif os.environ.get("OCI_IAM_TYPE"):
-    os.environ["OCIFS_IAM_TYPE"] = os.environ.get("OCI_IAM_TYPE")
+setup_default_auth()
