@@ -2,6 +2,15 @@
 Release Notes
 =============
 
+1.0.2
+-----
+Release date: Jul 14, 2023
+
+**New Features and Enhancements:**
+
+* Changed the default authentication to the resource principal.
+
+
 1.0.1
 -----
 Release date: Jun 15, 2023
