@@ -67,12 +67,6 @@ class ArtifactUploader:
 
     def __init__(self):
         """Initializes `ArtifactUploader` instance."""
-        auth_type = os.environ.get(
-            "OCI_IAM_TYPE", os.environ.get("OCIFS_IAM_TYPE", AuthType.API_KEY)
-        )
-        logger.debug(f"Using auth {auth_type=}")
-        set_auth(auth_type)
-
         self.upload_manager = object_storage.UploadManager(
             OCIClientFactory(**default_signer()).object_storage
         )
