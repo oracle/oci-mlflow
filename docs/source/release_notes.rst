@@ -4,7 +4,7 @@ Release Notes
 
 1.0.2
 -----
-Release date: Jul 21, 2023
+Release date: Jul 27, 2023
 
 **New Features and Enhancements:**
 

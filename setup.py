@@ -34,7 +34,7 @@ with open_relative("README.md") as f:
 
 install_requires = [
     "mlflow>=2.3.2",
-    "oracle-ads>=2.8.5",
+    "oracle-ads>=2.8.8",
 ]
 
 extras_require = {"dev": ["pytest", "pytest-cov", "pytest-env"]}
