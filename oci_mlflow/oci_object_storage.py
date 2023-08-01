@@ -9,18 +9,21 @@ from typing import List
 from urllib.parse import urlparse
 
 import fsspec
-from ads.common.auth import AuthType, default_signer, set_auth
+from ads.common import auth
 from ads.common.oci_client import OCIClientFactory
 from mlflow.entities import FileInfo
 from mlflow.store.artifact.artifact_repo import ArtifactRepository
 from mlflow.utils.file_utils import relative_path_to_artifact_path
 from oci import object_storage
+from oci.auth.signers import InstancePrincipalsDelegationTokenSigner
 from ocifs import OCIFileSystem
 
 from oci_mlflow import logger
 
 OCI_SCHEME = "oci"
 OCI_PREFIX = f"{OCI_SCHEME}://"
+DEFAULT_DELEGATION_TOKEN_PATH = "/opt/spark/delegation-secrets/delegation.jwt"
+DELEGATION_TOKEN_PATH = "DELEGATION_TOKEN_PATH"
 
 
 def parse_os_uri(uri: str):
@@ -55,6 +58,67 @@ def parse_os_uri(uri: str):
     return bucket, ns, path
 
 
+def get_token_path():
+    """
+    Gets delegation token path.
+
+    Return
+    ------
+    str
+        The delegation token path.
+    """
+    token_path = (
+        DEFAULT_DELEGATION_TOKEN_PATH
+        if os.path.exists(DEFAULT_DELEGATION_TOKEN_PATH)
+        else os.environ.get(DELEGATION_TOKEN_PATH)
+    )
+    return token_path
+
+
+def get_delegation_token_signer(token_path: str):
+    """
+    Generate delegation token signer.
+
+    Parameters
+    ----------
+    token_path: str
+        The delegation token path.
+
+    Return
+    ------
+    oci.auth.signers.InstancePrincipalsDelegationTokenSigner
+        The delegation token signer.
+
+    """
+    with open(token_path) as fd:
+        delegation_token = fd.read()
+    signer = InstancePrincipalsDelegationTokenSigner(delegation_token=delegation_token)
+    return signer
+
+
+def get_storage_options(token_path: str = None):
+    """
+    Generate storage options. If running in Data Flow, use Delegation Token.
+    If running locally, use default signer.
+
+    Parameters
+    ----------
+    token_path: str
+        Defaults to None. The delegation token path.
+
+    Return
+    ------
+    dict
+        The storage options can be passed in fsspec.
+    """
+    storage_options = (
+        auth.default_signer()
+        if token_path is None
+        else {"config": {}, "signer": get_delegation_token_signer(token_path)}
+    )
+    return storage_options
+
+
 class ArtifactUploader:
     """
     The class helper to upload model artifacts.
@@ -67,8 +131,9 @@ class ArtifactUploader:
 
     def __init__(self):
         """Initializes `ArtifactUploader` instance."""
+        auth = get_storage_options(token_path=get_token_path())
         self.upload_manager = object_storage.UploadManager(
-            OCIClientFactory(**default_signer()).object_storage
+            OCIClientFactory(**auth).object_storage
         )
 
     def upload(self, file_path: str, dst_path: str):
@@ -154,8 +219,9 @@ class OCIObjectStorageArtifactRepository(ArtifactRepository):
         """
         Gets fssepc filesystem based on the uri scheme.
         """
+        storage_options = get_storage_options(token_path=get_token_path())
         self.fs = fsspec.filesystem(
-            urlparse(self.artifact_uri).scheme
+            urlparse(self.artifact_uri).scheme, **storage_options
         )  # FileSystem class corresponding to the URI scheme.
 
         return self.fs

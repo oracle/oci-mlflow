@@ -14,6 +14,9 @@ from oci_mlflow import oci_object_storage
 from oci_mlflow.oci_object_storage import (
     ArtifactUploader,
     OCIObjectStorageArtifactRepository,
+    get_token_path,
+    get_storage_options,
+    DEFAULT_DELEGATION_TOKEN_PATH,
 )
 from oci import object_storage
 
@@ -145,3 +148,33 @@ class TestArtifactUploader:
             file_path=local_file,
         )
 
+
+class TestUtils:
+    """Test static methods in oci_object_storage.py."""
+
+    @patch("os.path.exists")
+    def test_get_token_path_in_df(self, mock_path):
+        """Tests getting the token path in DF session."""
+        mock_path.return_value = True
+        assert get_token_path() == DEFAULT_DELEGATION_TOKEN_PATH
+
+    @patch("os.path.exists")
+    def test_get_token_path_locally(self, mock_path):
+        """Tests getting the token path locally."""
+        mock_path.return_value = False
+        assert get_token_path() == None
+
+    @patch("oci_mlflow.oci_object_storage.get_delegation_token_signer")
+    def test_get_storage_options_in_df(self, mock_get_signer):
+        """Tests getting the storage options in DF session."""
+        get_storage_options(token_path=DEFAULT_DELEGATION_TOKEN_PATH)
+        mock_get_signer.assert_called_once_with(DEFAULT_DELEGATION_TOKEN_PATH)
+
+    @patch("ads.common.auth.default_signer")
+    def test_get_storage_options_locally(self, mock_default_signer):
+        """Tests getting the storage options locally."""
+        expected_config = {"config": "value", "signer": "value2"}
+        mock_default_signer.return_value = expected_config
+
+        storage_options = get_storage_options(token_path=None)
+        assert storage_options == expected_config
