@@ -137,7 +137,6 @@ class ArtifactUploader:
 
     def __init__(self):
         """Initializes `ArtifactUploader` instance."""
-        # auth = get_storage_options(token_path=get_token_path())
         self.upload_manager = object_storage.UploadManager(
             OCIClientFactory(**get_signer(token_path=get_token_path())).object_storage
         )
