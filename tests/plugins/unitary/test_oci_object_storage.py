@@ -15,7 +15,7 @@ from oci_mlflow.oci_object_storage import (
     ArtifactUploader,
     OCIObjectStorageArtifactRepository,
     get_token_path,
-    get_storage_options,
+    get_signer,
     DEFAULT_DELEGATION_TOKEN_PATH,
 )
 from oci import object_storage
@@ -165,16 +165,22 @@ class TestUtils:
         assert get_token_path() == None
 
     @patch("oci_mlflow.oci_object_storage.get_delegation_token_signer")
-    def test_get_storage_options_in_df(self, mock_get_signer):
+    @patch("ads.common.auth.set_auth")
+    def test_get_signer_in_df(self, mock_set_auth, mock_get_signer):
         """Tests getting the storage options in DF session."""
-        get_storage_options(token_path=DEFAULT_DELEGATION_TOKEN_PATH)
-        mock_get_signer.assert_called_once_with(DEFAULT_DELEGATION_TOKEN_PATH)
+        get_signer(token_path=DEFAULT_DELEGATION_TOKEN_PATH)
+        mock_set_auth.assert_called_once_with(
+            signer_callable=mock_get_signer,
+            signer_kwargs={"token_path": DEFAULT_DELEGATION_TOKEN_PATH},
+        )
 
     @patch("ads.common.auth.default_signer")
-    def test_get_storage_options_locally(self, mock_default_signer):
+    @patch("ads.common.auth.set_auth")
+    def test_get_signer_locally(self, mock_set_auth, mock_default_signer):
         """Tests getting the storage options locally."""
         expected_config = {"config": "value", "signer": "value2"}
         mock_default_signer.return_value = expected_config
 
-        storage_options = get_storage_options(token_path=None)
-        assert storage_options == expected_config
+        signer = get_signer(token_path=None)
+        mock_set_auth.assert_not_called()
+        assert signer == expected_config

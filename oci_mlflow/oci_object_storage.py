@@ -96,9 +96,9 @@ def get_delegation_token_signer(token_path: str):
     return signer
 
 
-def get_storage_options(token_path: str = None):
+def get_signer(token_path: str = None):
     """
-    Generate storage options. If running in Data Flow, use Delegation Token.
+    Generate default_signer. If running in Data Flow, use InstancePrincipalsDelegationTokenSigner.
     If running locally, use default signer.
 
     Parameters
@@ -109,14 +109,20 @@ def get_storage_options(token_path: str = None):
     Return
     ------
     dict
-        The storage options can be passed in fsspec.
+        Contains keys - config, signer and client_kwargs.
+
+        - The config contains the config loaded from the configuration loaded from the default location if the default
+          auth mode is API keys, otherwise it is empty dictionary.
+        - The signer contains the signer object created from default auth mode.
+        - client_kwargs contains the `client_kwargs` that was passed in as input parameter.
+
     """
-    storage_options = (
-        auth.default_signer()
-        if token_path is None
-        else {"config": {}, "signer": get_delegation_token_signer(token_path)}
-    )
-    return storage_options
+    if token_path:
+        auth.set_auth(
+            signer_callable=get_delegation_token_signer,
+            signer_kwargs={"token_path": token_path},
+        )
+    return auth.default_signer()
 
 
 class ArtifactUploader:
@@ -131,9 +137,9 @@ class ArtifactUploader:
 
     def __init__(self):
         """Initializes `ArtifactUploader` instance."""
-        auth = get_storage_options(token_path=get_token_path())
+        # auth = get_storage_options(token_path=get_token_path())
         self.upload_manager = object_storage.UploadManager(
-            OCIClientFactory(**auth).object_storage
+            OCIClientFactory(**get_signer(token_path=get_token_path())).object_storage
         )
 
     def upload(self, file_path: str, dst_path: str):
@@ -219,9 +225,9 @@ class OCIObjectStorageArtifactRepository(ArtifactRepository):
         """
         Gets fssepc filesystem based on the uri scheme.
         """
-        storage_options = get_storage_options(token_path=get_token_path())
         self.fs = fsspec.filesystem(
-            urlparse(self.artifact_uri).scheme, **storage_options
+            urlparse(self.artifact_uri).scheme,
+            **get_signer(token_path=get_token_path()),
         )  # FileSystem class corresponding to the URI scheme.
 
         return self.fs
