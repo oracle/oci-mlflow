@@ -7,6 +7,10 @@ set -m -e -o pipefail
 
 conda activate oci-mlflow
 
+echo "========== MLflow server is launchng... "==========
+
 mlflow server $@
+
+echo ""========== MLflow server is shutting down... "=========="
 
 exit $LastExitCode
