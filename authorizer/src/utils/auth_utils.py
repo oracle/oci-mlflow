@@ -1,4 +1,3 @@
-import logging
 import os
 from enum import Enum
 from typing import Dict, List
@@ -29,7 +28,6 @@ def get_signer(signer_type: SignerType = SignerType.AUTO):
             signer_type = SignerType.RESOURCE_PRINCIPAL
         else:
             signer_type = SignerType.INSTANCE_PRINCIPAL
-    logging.getLogger().info(signer_type)
     if signer_type == SignerType.RESOURCE_PRINCIPAL:
         return oci.auth.signers.get_resource_principals_signer()
     else:
@@ -39,7 +37,6 @@ def get_signer(signer_type: SignerType = SignerType.AUTO):
 def do_authn(idc: ExtendedIdentityDataPlaneClient, headers: Dict[str, List[str]]) -> Principal:
     client_details = AuthenticateClientDetails()
     client_details.request_headers = headers
-    logging.getLogger().info(headers)
     authenticate_response = idc.authenticate_client(authenticate_client_details=client_details)
     authenticate_result: AuthenticateClientResult = authenticate_response.data
     if authenticate_result.principal is None:

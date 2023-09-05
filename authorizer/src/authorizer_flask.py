@@ -17,7 +17,6 @@ def generate_apigw_json_payload() -> io.BytesIO:
     headers = {k.lower(): v for k, v in flask.request.headers.items()}
     pl = {"type": "USER_DEFINED",
           "data": headers}
-    headers["(request-target)"] = headers["path"]
     return io.BytesIO(bytes(json.dumps(pl), 'utf-8'))
 
 
