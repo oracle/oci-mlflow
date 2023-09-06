@@ -1,18 +1,39 @@
 from typing import List
 
-import oci
 import six
 from oci import retry
+from oci.identity_data_plane import DataplaneClient
+from oci.identity_data_plane.models import (
+    AuthenticateClientDetails,
+    FilterGroupMembershipDetails
+)
+from oci.response import Response
 
 
-class ExtendedIdentityDataPlaneClient(oci.identity_data_plane.DataplaneClient):
-    """
-        Identity Dataplane Client with additional API support
-    """
+class ExtendedIdentityDataPlaneClient(DataplaneClient):
+    """Identity Dataplane Client with additional API support for authn/authz validation."""
 
-    def authenticate_client(self,
-                            authenticate_client_details: oci.identity_data_plane.models.AuthenticateClientDetails,
-                            **kwargs) -> oci.response.Response:  # pragma: no cover
+    def authenticate_client(
+        self,
+        authenticate_client_details: AuthenticateClientDetails,
+        **kwargs
+    ) -> Response:
+        """Performs authn validation from oci backend.
+
+        Parameters
+        ----------
+        authenticate_client_details: AuthenticateClientDetails
+            An instance of AuthenticateClientDetails to send to oci backend.
+        kwargs:
+            retry_strategy: obj
+                A retry strategy to apply to all calls made by this service client (i.e. at the client level).
+                There is no retry strategy applied by default.
+        
+        Returns
+        -------
+        Response:
+            An instance of Response
+        """
         resource_path = "/authentication/authenticateClient"
         method = "POST"
         operation_name = "authenticate_client"
@@ -58,9 +79,27 @@ class ExtendedIdentityDataPlaneClient(oci.identity_data_plane.DataplaneClient):
                 operation_name=operation_name,
                 api_reference_link=api_reference_link)
 
-    def filter_group_membership(self,
-                                filter_membership_details: oci.identity_data_plane.models.FilterGroupMembershipDetails,
-                                **kwargs) -> oci.response.Response:  # pragma: no cover
+    def filter_group_membership(
+        self,
+        filter_membership_details: FilterGroupMembershipDetails,
+        **kwargs
+    ) -> Response:
+        """Validates if given group ids are authorized from oci backend.
+
+        Parameters
+        ----------
+        filter_membership_details: FilterGroupMembershipDetails
+            An instance of FilterGroupMembershipDetails to send to oci backend.
+        kwargs:
+            retry_strategy: obj
+                A retry strategy to apply to all calls made by this service client (i.e. at the client level).
+                There is no retry strategy applied by default.
+        
+        Returns
+        -------
+        Response:
+            An instance of Response
+        """
         resource_path = "/filterGroupMembership"
         method = "POST"
         operation_name = "filter_group_membership"
