@@ -16,7 +16,7 @@ jobs:
           python-version: "3.x"
       - name: Build distribution 📦
         run: |
-          pip install wheel
+          pip install build
           make dist
       - name: Validate
         run: |

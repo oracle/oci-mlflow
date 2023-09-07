@@ -7,7 +7,7 @@ on:
       - "oci_mlflow/**"
       - "tests/**"
       - "**requirements.txt"
-      - setup.py
+      - pyproject.toml
   # To run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -88,11 +88,11 @@ jobs:
         if: ${{ success() }} && ${{ github.event.issue.pull_request }}
         run: |
           set -x # print commands that are executed
-          
-          # Prepare default cov body text 
+
+          # Prepare default cov body text
           COV_BODY_INTRO="📌 Overall coverage:\n\n"
           echo COV_BODY="$COV_BODY_INTRO No success to gather report. 😿" >> $GITHUB_ENV
-          
+
           # Calculate overall coverage and update body message
           COV=$(grep -E 'pc_cov' htmlcov/index.html | cut -d'>' -f 2 | cut -d'%' -f 1)
             if [[ ! -z $COV ]]; then
