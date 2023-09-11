@@ -11,11 +11,10 @@ import os
 logger = logging.getLogger("oci.mlflow")
 logger.setLevel(logging.INFO)
 
-__version__ = ""
-with open(
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "version.json")
-) as version_file:
-    __version__ = json.load(version_file)["version"]
+# https://packaging.python.org/en/latest/guides/single-sourcing-package-version/#single-sourcing-the-package-version
+from importlib import metadata
+
+__version__ = metadata.version("oci_mlflow")
 
 
 def setup_default_auth():
