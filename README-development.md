@@ -17,7 +17,7 @@ make dist
 Alternatively you can run -
 
 ```
-python setup.py bdist_wheel
+python -m build
 ```
 
 This wheel can then be installed using pip.
@@ -91,7 +91,7 @@ make clean wheel launch
 Alternatively you can run -
 
 ```
-python setup.py bdist_wheel
+python -m build
 cp dist/*.whl container-image/run/
 docker build --network host --build-arg RND=1 -t oci-mlflow:latest -f container-image/Dockerfile .
 docker run --rm -it --net host -v ~/.oci:/root/.oci --env-file .env --name oci-mlflow oci-mlflow:latest
@@ -106,7 +106,7 @@ make clean wheel launch-shell
 Alternatively you can run -
 
 ```
-python setup.py bdist_wheel
+python -m build
 cp dist/*.whl container-image/run/
 docker build --network host --build-arg RND=1 -t oci-mlflow:latest -f container-image/Dockerfile .
 docker run --rm -it --net host -v ~/.oci:/root/.oci --env-file .env --entrypoint bash --name oci-mlflow-shell oci-mlflow:latest

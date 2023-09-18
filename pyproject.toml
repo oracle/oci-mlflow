@@ -1,0 +1,69 @@
+## This file created and used instead of setup.py for building and installing ads package. This change is to
+## follow best practive to "not invoke setup.py directly", see detailed explanation why here:
+## https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html.
+## Check README-development.md and Makefile for instruction how to install or build ADS locally.
+
+[build-system]
+# These are the assumed default build requirements from pip:
+# https://pip.pypa.io/en/stable/reference/pip/#pep-517-and-518-support
+# PEP 517 – A build-system independent format for source trees - https://peps.python.org/pep-0517/
+requires = ["flit-core >= 3.8"]
+build-backend = "flit_core.buildapi"
+
+
+[project]
+# Declaring project metadata
+# https://packaging.python.org/en/latest/specifications/declaring-project-metadata/
+# PEP 621 – Storing project metadata in pyproject.toml - https://peps.python.org/pep-0621/
+# PEP 518 – Specifying Minimum Build System Requirements for Python Projects https://peps.python.org/pep-0518/
+
+# Required
+name = "oci-mlflow"  # the install (PyPI) name
+version = "1.0.2"
+
+# Optional
+description = "OCI MLflow plugin to use OCI resources within MLflow"
+readme = {file = "README.md", content-type = "text/markdown"}
+requires-python = ">=3.8"
+license = {file = "LICENSE.txt"}
+authors = [
+  {name = "Oracle Cloud Infrastructure Data Science"}
+]
+keywords = [
+  "Oracle Cloud Infrastructure",
+  "OCI",
+  "Object Storage",
+  "MLflow",
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Universal Permissive License (UPL)",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+]
+
+# PEP 508 – Dependency specification for Python Software Packages - https://peps.python.org/pep-0508/
+# In dependencies se "<library>; platform_machine == 'aarch64'" to specify ARM underlying platform
+# Copied from install_requires list in setup.py, setup.py got removed in favor of this config file
+dependencies = [
+  "mlflow>=2.3.2",
+  "oracle-ads>=2.8.8",
+]
+
+[project.urls]
+"Github" = "https://github.com/oracle/oci-mlflow"
+"Documentation" = "https://oci-mlflow.readthedocs.io/en/latest/index.html"
+
+# https://peps.python.org/pep-0621/#entry-points
+# Note the quotes around mlflow.artifact_repository in order to escape the dot .
+[project.entry-points."mlflow.artifact_repository"]
+oci = "oci_mlflow.oci_object_storage:OCIObjectStorageArtifactRepository"
+
+[project.entry-points."mlflow.project_backend"]
+oci-datascience = "oci_mlflow.project:OCIProjectBackend"
+
+[project.entry-points."mlflow.deployments"]
+oci-datascience = "oci_mlflow.deployment"

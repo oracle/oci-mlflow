@@ -14,7 +14,7 @@ clean:
 	@find ./ -name '*~' -exec rm -f {} \;
 
 dist: clean
-	@python setup.py bdist_wheel
+	@python -m build
 
 build-image:
 	docker build --network host --build-arg RND=$(RND) -t $(IMAGE_NAME):$(TAG) -f container-image/Dockerfile .

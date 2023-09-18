@@ -30,6 +30,7 @@ RUN chmod a+x ${MLFLOW_DIR}/launch_mlflow.sh
 ENV MLFLOW_DIR=${MLFLOW_DIR}
 
 EXPOSE 5000
+HEALTHCHECK --interval=30s CMD curl -f -sI http://localhost:5000 || exit 1
 
 RUN if [ -f ${MLFLOW_DIR}/oci_mlflow*.whl ]; then \
         local_whl=$(find ${MLFLOW_DIR} -name "*.whl" -exec basename {} \; | head -n 1 ); \
