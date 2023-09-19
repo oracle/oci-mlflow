@@ -56,7 +56,7 @@ setup(
         "mlflow.artifact_repository": "oci=oci_mlflow.oci_object_storage:OCIObjectStorageArtifactRepository",
         "mlflow.project_backend": "oci-datascience=oci_mlflow.project:OCIProjectBackend",
         "mlflow.deployments": "oci-datascience=oci_mlflow.deployment",
-        "mlflow.request_auth_provider": "oci-datascience=oci_mlflow.signer_plugin:OCIMLFlowAuthRequestProvider",
+        "mlflow.request_auth_provider": "oci-datascience=oci_mlflow.auth_plugin:OCIMLFlowAuthRequestProvider",
     },
     classifiers=[
         "Development Status :: 5 - Production/Stable",
