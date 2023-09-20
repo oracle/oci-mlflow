@@ -131,6 +131,6 @@ Set the environment variable ``MLFLOW_TRACKING_AUTH`` as ``OCI_REQUEST_AUTH``
 
 Now all http request sent by mlflow sdk to tracking server will be injected with OCI
 signer and authenticated/authorized by the Authorizer Function via API Gateway. Only
-the authenticated oci credentials and authorized groups/dynamic groups can have access
-to the tracking server. Once the validation succeeds, the request will be routed to
-the backend tracking server.
+the authenticated oci credentials and authorized groups/dynamic groups from ``GROUP_IDS``
+can have access to the tracking server. Once the validation succeeds, the request will
+be routed to the backend tracking server.
