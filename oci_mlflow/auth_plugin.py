@@ -41,7 +41,7 @@ class OCIMLFlowAuthRequestProvider(RequestAuthProvider):
 
     def get_auth(self):
         """
-        Generate context-specific request auth.
+        Generate oci signer based on oci environment variable.
 
         :return: OCI MLFlow signer
         """
