@@ -299,28 +299,3 @@ def resolve_python_version(conda_yaml_file: str) -> Union[str, None]:
         ]
         version = python[0].split("=")[1] if len(python) > 0 else None
     return version
-
-
-def _read_security_token_file(security_token_file: str) -> str:
-    """Reads security token from file.
-
-    Parameters
-    ----------
-    security_token_file: str
-        The path to security token file.
-
-    Returns
-    -------
-    str:
-        Security token string.
-    """
-    expanded_path = os.path.expanduser(security_token_file)
-    if not os.path.isfile(expanded_path):
-        raise ValueError("Invalid `security_token_file`. Specify a valid path.")
-    try:
-        token = None
-        with open(expanded_path, 'r') as f:
-            token = f.read()
-        return token
-    except:
-        raise
