@@ -67,3 +67,6 @@ oci-datascience = "oci_mlflow.project:OCIProjectBackend"
 
 [project.entry-points."mlflow.deployments"]
 oci-datascience = "oci_mlflow.deployment"
+
+[project.entry-points."mlflow.request_auth_provider"]
+oci-datascience = "oci_mlflow.auth_plugin:OCIMLFlowAuthRequestProvider"
