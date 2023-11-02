@@ -49,7 +49,7 @@ classifiers = [
 # In dependencies se "<library>; platform_machine == 'aarch64'" to specify ARM underlying platform
 # Copied from install_requires list in setup.py, setup.py got removed in favor of this config file
 dependencies = [
-  "mlflow>=2.3.2",
+  "mlflow>=2.8.0",
   "oracle-ads>=2.8.8",
 ]
 
@@ -67,3 +67,6 @@ oci-datascience = "oci_mlflow.project:OCIProjectBackend"
 
 [project.entry-points."mlflow.deployments"]
 oci-datascience = "oci_mlflow.deployment"
+
+[project.entry-points."mlflow.request_auth_provider"]
+oci-datascience = "oci_mlflow.auth_plugin:OCIMLFlowAuthRequestProvider"
