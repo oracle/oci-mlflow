@@ -1,9 +1,10 @@
 autodoc
+furo
 nbsphinx
+oci-mlflow
 sphinx
 sphinx_copybutton
 sphinx_code_tabs
 sphinx-autobuild
 sphinx-autorun
 sphinx-design
-furo
