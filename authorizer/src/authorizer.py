@@ -31,6 +31,8 @@ from authorizer.src.utils.header_utils import (
     MissingRequiredHeadersException
 )
 
+logger = logging.getLogger(__name__)
+
 # Initialising here so that this call is cached for future fn executions
 identity_client = ExtendedIdentityDataPlaneClient(
     config={}, 
@@ -39,7 +41,7 @@ identity_client = ExtendedIdentityDataPlaneClient(
 
 # The rest api methods currently supported by mlflow
 # https://mlflow.org/docs/latest/rest-api.html
-MLFLOW_REST_API_METHODS = ["post", "get", "delete", "patch"]
+MLFLOW_REST_API_METHODS = ["post", "get", "delete", "patch", "put"]
 
 
 def authorizer(ctx: context.InvokeContext, data: io.BytesIO = None) -> fdk.response.Response:
@@ -99,7 +101,7 @@ def authorizer(ctx: context.InvokeContext, data: io.BytesIO = None) -> fdk.respo
                 )
             )
         except AuthorizationException as ex:
-            logging.getLogger().error('Error occurred while performing authZ: %s', str(ex))
+            logger.error('Error occurred while performing authZ: %s', str(ex))
     
     return response.Response(
         ctx, status_code=401, response_data=json.dumps(
