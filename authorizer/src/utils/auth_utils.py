@@ -1,3 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: utf-8; -*-
+
+# Copyright (c) 2023 Oracle and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
 import os
 from enum import Enum
 from typing import Dict, List
@@ -14,7 +19,7 @@ from oci.identity_data_plane.models import (
 )
 from oci.identity_data_plane.models.principal import Principal
 
-from utils.identity_utils import (
+from authorizer.src.utils.identity_utils import (
     AuthenticationException,
     AuthorizationException,
     ExtendedIdentityDataPlaneClient

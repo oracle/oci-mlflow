@@ -1,3 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: utf-8; -*-
+
+# Copyright (c) 2023 Oracle and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
 import io
 import json
 import logging
@@ -6,13 +11,13 @@ import copy
 import fdk.response
 from fdk import context, response
 
-from utils.identity_utils import (
+from authorizer.src.utils.identity_utils import (
     ExtendedIdentityDataPlaneClient,
     AuthenticationException,
     AuthorizationException
 )
 
-from utils.auth_utils import (
+from authorizer.src.utils.auth_utils import (
     get_signer,
     SignerType,
     do_authn,
@@ -20,7 +25,7 @@ from utils.auth_utils import (
     get_group_ids_from_config
 )
 
-from utils.header_utils import (
+from authorizer.src.utils.header_utils import (
     extract_and_validate_headers,
     AuthorizationHeaderMissingException,
     MissingRequiredHeadersException
