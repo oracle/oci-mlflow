@@ -1,7 +1,7 @@
-# Provide the path of base OS image here. Customer needs to refer to their own internal docker registry.
-FROM ocr-docker-remote.artifactory.oci.oraclecorp.com/os/oraclelinux:8-slim
+# Provide the path of base OS image here.
+FROM ghcr.io/oracle/oraclelinux:8-slim
 
-# Install python and pip. These instructions might change depending upon the base image you choose to use. Please update them accordingly.
+# Install python and pip.
 RUN echo "-internal" > /etc/dnf/vars/ociregion &&\
         microdnf repolist &&\
         microdnf -y update &&\
