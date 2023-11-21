@@ -1,6 +1,6 @@
 schema_version: 20180708
 name: authorizer
-version: 0.0.34
+version: 0.0.1
 runtime: docker
 entrypoint: /python/bin/fdk /function/authorizer.py authorizer
 memory: 256
