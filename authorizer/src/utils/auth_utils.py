@@ -129,9 +129,7 @@ def get_group_ids_from_config(config: Dict) -> List[str]:
     List
         A list of group ids seperated in the original string by ','
     """
-    group_ids = config.get(ALLOWED_GROUP_IDS)
-    group_ids = group_ids.replace(" ", "")
-    return group_ids.split(',')
+    return config.get(ALLOWED_GROUP_IDS, "").replace(" ", "").split(",")
 
 
 def _get_internal_instance_principal_signer() -> InstancePrincipalsSecurityTokenSigner:
@@ -154,15 +152,8 @@ def _get_internal_instance_principal_signer() -> InstancePrincipalsSecurityToken
 
 def _get_env_bool(env_var: str, default: bool = False) -> bool:
     env_val = os.getenv(env_var)
+
     if env_val is None:
-        env_val = default
-    else:
-        env_val = env_val.lower()
-        if env_val == "true":
-            env_val = True
-        elif env_val == "false":
-            env_val = False
-        else:
-            raise ValueError("For environment variable: {0} only string values T/true or F/false are allowed but: \
-                {1} was provided.".format(env_var, env_val))
-    return env_val
+        return default
+
+    return env_val.lower() in ("true","t","1")

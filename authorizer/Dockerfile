@@ -12,9 +12,7 @@ RUN echo "-internal" > /etc/dnf/vars/ociregion &&\
 COPY requirements.txt ./
 
 # Rest of this section contains commands to install python dependencies specified in requirement.txt and then setting up python path, docker CMD, Entrypoint etc. These commands should remain same except the pip install which might change depending upon command syntax and the PyPi repository.
-RUN	/usr/bin/python3.8 -m pip install --default-timeout=100 --target /python/ --trusted-host=artifactory.oci.oraclecorp.com \
-                                          -i https://artifactory.oci.oraclecorp.com/api/pypi/global-release-pypi/simple \
-                                          -r requirements.txt
+RUN /usr/bin/python3.8 -m pip install --default-timeout=100 --target /python/ -r requirements.txt
 
 WORKDIR /authorizer
 COPY src/authorizer.py /authorizer/

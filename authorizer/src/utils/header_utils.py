@@ -29,7 +29,7 @@ class MissingRequiredHeadersException(Exception):
 
 class AuthorizationHeaderMissingException(Exception):
     def __str__(self):
-        return "Expected authorization header to be present but was not found"
+        return "Expected the authorization header to be present, but it was not found"
 
 
 class AuthorizationSigningHeadersMissingException(Exception):
