@@ -187,7 +187,7 @@ class OCIObjectStorageArtifactRepository(ArtifactRepository):
         artifact_path:str
             Directory within the run's artifact directory in which to log the artifact.
         """
-        # Since the object storage path should contain "/", the code below needs to use concatnation "+" instead of 
+        # Since the object storage path should contain "/", the code below needs to use concatenation "+" instead of 
         # os.path.join(). The latter can introduce "\" in Windows which can't be recognized by object storage as a valid prefix. 
         # `artifact_path` must not be space character like " " or "   ".
         artifact_path = artifact_path.rstrip("/") + "/" if artifact_path else ""
@@ -207,7 +207,7 @@ class OCIObjectStorageArtifactRepository(ArtifactRepository):
             Directory within the run's artifact directory in which to log the artifacts.
         """
         artifact_uploader = ArtifactUploader()
-        # Since the object storage path should contain "/", the code below needs to use concatnation "+" instead of 
+        # Since the object storage path should contain "/", the code below needs to use concatenation "+" instead of 
         # os.path.join(). The latter can introduce "\" in Windows which can't be recognized by object storage as a valid prefix. 
         # `artifact_path` must not be space character like " " or "   ".
         artifact_path = artifact_path.rstrip("/") + "/" if artifact_path else ""
