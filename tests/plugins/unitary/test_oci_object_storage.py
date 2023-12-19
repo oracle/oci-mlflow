@@ -87,6 +87,35 @@ class TestOCIObjectStorageArtifactRepository:
         mock_upload_file.assert_called_once_with(local_file, expected_dest_path)
 
     @patch.object(ArtifactUploader, "upload")
+    def test_log_artifact_with_empty_path(self, mock_upload_file, oci_artifact_repo):
+        local_file = "test_files/test.txt"
+        artifact_path = ""
+        oci_artifact_repo.log_artifact(local_file, artifact_path)
+        expected_dest_path = (
+            "oci://my-bucket@my-namespace/my-artifact-path/test.txt"
+        )
+        mock_upload_file.assert_called_once_with(local_file, expected_dest_path)
+
+    def test_log_artifact_with_whitespace(self, oci_artifact_repo):
+        local_file = "test_files/test.txt"
+        artifact_path = "  "
+        with pytest.raises(
+            ValueError,
+            match="`artifact_path` must not be whitespace string."
+        ):
+            oci_artifact_repo.log_artifact(local_file, artifact_path)
+
+    @patch.object(ArtifactUploader, "upload")
+    def test_log_artifact_with_slash_ending_path(self, mock_upload_file, oci_artifact_repo):
+        local_file = "test_files/test.txt"
+        artifact_path = "logs/"
+        oci_artifact_repo.log_artifact(local_file, artifact_path)
+        expected_dest_path = (
+            "oci://my-bucket@my-namespace/my-artifact-path/logs/test.txt"
+        )
+        mock_upload_file.assert_called_once_with(local_file, expected_dest_path)
+
+    @patch.object(ArtifactUploader, "upload")
     def test_log_artifacts(self, mock_upload_file, oci_artifact_repo):
         local_dir = os.path.join(self.curr_dir, "test_files")
         dest_path = "path/to/dest"

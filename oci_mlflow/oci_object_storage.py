@@ -190,6 +190,8 @@ class OCIObjectStorageArtifactRepository(ArtifactRepository):
         # Since the object storage path should contain "/", the code below needs to use concatenation "+" instead of 
         # os.path.join(). The latter can introduce "\" in Windows which can't be recognized by object storage as a valid prefix. 
         # `artifact_path` must not be space character like " " or "   ".
+        if artifact_path.isspace():
+            raise ValueError("`artifact_path` must not be whitespace string.")
         artifact_path = artifact_path.rstrip("/") + "/" if artifact_path else ""
         dest_path = self.artifact_uri.rstrip("/") + "/" + artifact_path + os.path.basename(local_file)
         ArtifactUploader().upload(local_file, dest_path)
@@ -210,6 +212,8 @@ class OCIObjectStorageArtifactRepository(ArtifactRepository):
         # Since the object storage path should contain "/", the code below needs to use concatenation "+" instead of 
         # os.path.join(). The latter can introduce "\" in Windows which can't be recognized by object storage as a valid prefix. 
         # `artifact_path` must not be space character like " " or "   ".
+        if artifact_path.isspace():
+            raise ValueError("`artifact_path` must not be whitespace string.")
         artifact_path = artifact_path.rstrip("/") + "/" if artifact_path else ""
         dest_path = self.artifact_uri.rstrip("/") + "/" + artifact_path
         local_dir = os.path.abspath(local_dir)
