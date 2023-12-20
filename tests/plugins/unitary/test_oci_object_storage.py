@@ -106,6 +106,16 @@ class TestOCIObjectStorageArtifactRepository:
             oci_artifact_repo.log_artifact(local_file, artifact_path)
 
     @patch.object(ArtifactUploader, "upload")
+    def test_log_artifact_with_none(self, mock_upload_file, oci_artifact_repo):
+        local_file = "test_files/test.txt"
+        artifact_path = None
+        oci_artifact_repo.log_artifact(local_file, artifact_path)
+        expected_dest_path = (
+            "oci://my-bucket@my-namespace/my-artifact-path/test.txt"
+        )
+        mock_upload_file.assert_called_once_with(local_file, expected_dest_path)
+
+    @patch.object(ArtifactUploader, "upload")
     def test_log_artifact_with_slash_ending_path(self, mock_upload_file, oci_artifact_repo):
         local_file = "test_files/test.txt"
         artifact_path = "logs/"
