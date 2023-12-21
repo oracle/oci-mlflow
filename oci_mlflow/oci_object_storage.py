@@ -187,9 +187,13 @@ class OCIObjectStorageArtifactRepository(ArtifactRepository):
         artifact_path:str
             Directory within the run's artifact directory in which to log the artifact.
         """
-        dest_path = os.path.join(
-            self.artifact_uri, artifact_path or "", os.path.basename(local_file)
-        )
+        # Since the object storage path should contain "/", the code below needs to use concatenation "+" instead of 
+        # os.path.join(). The latter can introduce "\" in Windows which can't be recognized by object storage as a valid prefix. 
+        # `artifact_path` must not be space character like " " or "   ".
+        if isinstance(artifact_path, str) and artifact_path.isspace():
+            raise ValueError("`artifact_path` must not be whitespace string.")
+        artifact_path = artifact_path.rstrip("/") + "/" if artifact_path else ""
+        dest_path = self.artifact_uri.rstrip("/") + "/" + artifact_path + os.path.basename(local_file)
         ArtifactUploader().upload(local_file, dest_path)
 
     def log_artifacts(self, local_dir: str, artifact_path: str = None):
@@ -205,7 +209,13 @@ class OCIObjectStorageArtifactRepository(ArtifactRepository):
             Directory within the run's artifact directory in which to log the artifacts.
         """
         artifact_uploader = ArtifactUploader()
-        dest_path = os.path.join(self.artifact_uri, artifact_path or "")
+        # Since the object storage path should contain "/", the code below needs to use concatenation "+" instead of 
+        # os.path.join(). The latter can introduce "\" in Windows which can't be recognized by object storage as a valid prefix. 
+        # `artifact_path` must not be space character like " " or "   ".
+        if isinstance(artifact_path, str) and artifact_path.isspace():
+            raise ValueError("`artifact_path` must not be whitespace string.")
+        artifact_path = artifact_path.rstrip("/") + "/" if artifact_path else ""
+        dest_path = self.artifact_uri.rstrip("/") + "/" + artifact_path
         local_dir = os.path.abspath(local_dir)
 
         for root, _, filenames in os.walk(local_dir):
@@ -213,11 +223,11 @@ class OCIObjectStorageArtifactRepository(ArtifactRepository):
             if root != local_dir:
                 rel_path = os.path.relpath(root, local_dir)
                 rel_path = relative_path_to_artifact_path(rel_path)
-                upload_path = os.path.join(dest_path, rel_path)
+                upload_path = dest_path + rel_path
             for f in filenames:
                 artifact_uploader.upload(
                     file_path=os.path.join(root, f),
-                    dst_path=os.path.join(upload_path, f),
+                    dst_path=upload_path + f
                 )
 
     def get_fs(self):
