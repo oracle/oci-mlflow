@@ -4,3 +4,4 @@ mock
 pip
 pytest
 pytest-codecov
+ruff
