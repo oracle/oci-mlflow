@@ -18,7 +18,7 @@ ARG CONTAINER_ARTIFACT_DIR=container-image
 ARG RND
 
 COPY ${CONTAINER_ARTIFACT_DIR}/${CONDA_ENV_FILE} /opt/env.yaml
-RUN conda install conda-forge::mamba && mamba env create -f /opt/env.yaml --name ${CONDA_ENV_NAME} && conda clean -afy
+RUN conda install -y conda-forge::mamba && mamba env create -f /opt/env.yaml --name ${CONDA_ENV_NAME} && conda clean -afy
 ENV PATH="/miniconda/envs/${CONDA_ENV_NAME}}/bin:$PATH"
 
 RUN conda init bash && source ~/.bashrc && conda activate ${CONDA_ENV_NAME}
