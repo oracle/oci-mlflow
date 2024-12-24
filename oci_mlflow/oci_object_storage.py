@@ -172,7 +172,7 @@ class OCIObjectStorageArtifactRepository(ArtifactRepository):
             full_path = remote_file_path
         fs: OCIFileSystem = self.get_fs()
         logger.info(f"{full_path}, {remote_file_path}")
-        fs.download(full_path, local_path)
+        fs.download(full_path, str(local_path))
 
     def log_artifact(self, local_file: str, artifact_path: str = None):
         """
