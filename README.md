@@ -2,12 +2,13 @@
 
 [![PyPI](https://img.shields.io/pypi/v/oci-mlflow.svg?style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/oci-mlflow/) [![Python](https://img.shields.io/pypi/pyversions/oci-mlflow.svg?style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/oci-mlflow/)
 
-The OCI MLflow plugin enables OCI users to use OCI resources to manage their machine learning usecase life cycle. This table below provides the mapping between the MLflow features and the OCI resources that are used.
+The OCI MLflow plugin enables OCI users to use OCI resources to manage their machine learning use case life cycle. This table below provides the mapping between the MLflow features and the OCI resources that are used.
 
 | MLflow Use Case    | OCI Resource |
 | -------- | ------- |
 | User running machine learning experiments on notebook, logs model artifacts, model performance etc  | Data Science Jobs, Object Storage, MySQL |
 | Batch workloads using spark | Data Flow, Object Storage, MySQL |
+| Model Catalog | Data Science Model Catalog |
 | Model Deployment    | Data Science Model Deployment |
 | User running machine learning experiments on notebook, logs model artifacts, model performance etc    | Object Storage, MySQL |
 
@@ -32,6 +33,8 @@ To test the `oci-mlflow` plugin call -
   - [Getting started with OCI Data Science Jobs](https://docs.oracle.com/en-us/iaas/data-science/using/jobs-about.htm)
   - [Getting started with Data Science Environments](https://docs.oracle.com/en-us/iaas/data-science/using/conda_environ_list.htm)
   - [Getting started with Custom Conda Environments](https://docs.oracle.com/en-us/iaas/data-science/using/conda_create_conda_env.htm)
+  - [Getting started with Model Catalog](https://docs.oracle.com/en-us/iaas/data-science/using/models-about.htm)
+  - [Getting started with Model Deployment](https://docs.oracle.com/en-us/iaas/data-science/using/model-dep-about.htm)
   - [Oracle AI & Data Science Blog](https://blogs.oracle.com/ai-and-datascience/)
   - [OCI Documentation](https://docs.oracle.com/en-us/iaas/data-science/using/data-science.htm)
 
