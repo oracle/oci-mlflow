@@ -24,7 +24,7 @@ version = "1.0.3"
 # Optional
 description = "OCI MLflow plugin to use OCI resources within MLflow"
 readme = {file = "README.md", content-type = "text/markdown"}
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = {file = "LICENSE.txt"}
 authors = [
   {name = "Oracle Cloud Infrastructure Data Science"}
@@ -40,7 +40,6 @@ classifiers = [
   "Intended Audience :: Developers",
   "License :: OSI Approved :: Universal Permissive License (UPL)",
   "Operating System :: OS Independent",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
