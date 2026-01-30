@@ -34,9 +34,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.10", "3.11", "3.12"]
         include:
-          - python-version: "3.9"
+          - python-version: "3.10"
             cov-reports: --cov=oci_mlflow --cov-report=xml --cov-report=html
 
     steps:
