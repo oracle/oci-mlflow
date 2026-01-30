@@ -19,12 +19,12 @@ build-backend = "flit_core.buildapi"
 
 # Required
 name = "oci-mlflow"  # the install (PyPI) name
-version = "1.0.2"
+version = "1.0.3"
 
 # Optional
 description = "OCI MLflow plugin to use OCI resources within MLflow"
 readme = {file = "README.md", content-type = "text/markdown"}
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 license = {file = "LICENSE.txt"}
 authors = [
   {name = "Oracle Cloud Infrastructure Data Science"}
@@ -40,17 +40,18 @@ classifiers = [
   "Intended Audience :: Developers",
   "License :: OSI Approved :: Universal Permissive License (UPL)",
   "Operating System :: OS Independent",
-  "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
 ]
 
 # PEP 508 – Dependency specification for Python Software Packages - https://peps.python.org/pep-0508/
 # In dependencies se "<library>; platform_machine == 'aarch64'" to specify ARM underlying platform
 # Copied from install_requires list in setup.py, setup.py got removed in favor of this config file
 dependencies = [
-  "mlflow>=2.8.0",
-  "oracle-ads>=2.8.8",
+  "mlflow>=3.8.1",
+  "oracle-ads>=2.14.4",
 ]
 
 [project.urls]

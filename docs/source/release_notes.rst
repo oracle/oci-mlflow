@@ -2,6 +2,15 @@
 Release Notes
 =============
 
+1.0.3
+-----
+Release date: Jan 30, 2026
+
+**New Features and Enhancements:**
+
+* Updated MLflow dependency to version ``>= 3.8.1``. This brings the latest fixes and improvements.
+
+
 1.0.2
 -----
 Release date: Jul 27, 2023
