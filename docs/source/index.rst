@@ -2,7 +2,7 @@
 OCI MLflow Plugins
 ==================
 
-The OCI MLflow plugins allow to utilize Oracle Cloud Infrastructure (OCI) resources to run MLflow experiments.
+The OCI MLflow plugins allow to utilize Open Container Initiative (OCI) resources to run MLflow experiments.
 
 |PyPI|_ |Python|_
 
